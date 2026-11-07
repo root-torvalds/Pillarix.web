@@ -38,7 +38,7 @@
             font-family: var(--font-sans);
             overflow-x: hidden;
             line-height: 1.6;
-            background-image: 
+            background-image:
                 radial-gradient(circle at 50% 0%, rgba(0, 242, 254, 0.12) 0%, transparent 50%),
                 radial-gradient(circle at 80% 80%, rgba(127, 0, 255, 0.08) 0%, transparent 50%);
             background-attachment: fixed;
@@ -69,6 +69,7 @@
                         0 0 15px rgba(0, 242, 254, 0.1);
         }
 
+        /* 1. ЛОГОТИП СЛЕВА ВМЕСТО СЛОВА PILLARIX */
         .brand-logo-link {
             display: flex;
             align-items: center;
@@ -173,7 +174,7 @@
             font-weight: 600;
         }
 
-        /* --- DOWNLOAD PANEL --- */
+        /* --- FEDORA-STYLE DOWNLOAD PANEL --- */
         .download-container {
             width: 100%;
             display: flex;
@@ -185,17 +186,17 @@
         .fedora-panel {
             background: var(--card-bg);
             border-radius: 28px;
-            padding: 35px 40px 40px;
+            padding: 40px;
             position: relative;
             border: 1px solid var(--border-glow);
             box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6),
                         0 0 30px rgba(0, 242, 254, 0.15);
             backdrop-filter: blur(12px);
-            
+
             width: 100%;
             max-width: 600px;
             aspect-ratio: 5 / 4;
-            
+
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -217,13 +218,13 @@
         }
 
         .panel-info {
-            margin-top: 25px;
+            margin-top: 50px;
         }
 
         .panel-info h2 {
             font-size: 1.9rem;
             font-weight: 900;
-            margin-bottom: 6px;
+            margin-bottom: 10px;
             background: linear-gradient(135deg, #00e676 0%, #00f2fe 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
@@ -233,34 +234,6 @@
         .panel-info p {
             color: var(--text-muted);
             font-size: 0.95rem;
-        }
-
-        /* ИКОНКА ДИСКА ISO */
-        .disc-icon-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin: 15px 0;
-            position: relative;
-        }
-
-        .disc-icon-img {
-            width: 140px;
-            height: 140px;
-            object-fit: contain;
-            filter: drop-shadow(0 0 20px rgba(0, 242, 254, 0.35));
-            transition: transform 0.5s ease, filter 0.5s ease;
-            animation: floatDisc 4s ease-in-out infinite;
-        }
-
-        .fedora-panel:hover .disc-icon-img {
-            transform: scale(1.08) rotate(5deg);
-            filter: drop-shadow(0 0 30px rgba(0, 242, 254, 0.7));
-        }
-
-        @keyframes floatDisc {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-8px); }
         }
 
         .btn-download {
@@ -303,30 +276,27 @@
             }
             .fedora-panel {
                 aspect-ratio: auto;
-                min-height: 480px;
+                min-height: 420px;
                 padding: 30px 20px;
-            }
-            .disc-icon-img {
-                width: 110px;
-                height: 110px;
             }
         }
     </style>
 </head>
 <body id="top">
 
-    <!-- NOTCH HEADER -->
+    <!-- ЧЁЛКА / NOTCH HEADER -->
     <div class="notch-container">
         <header class="notch-header">
             <div class="notch-left">
+                <!-- Ссылка-картинка с твоей иконкой (переход на #top) -->
                 <a href="#top" class="brand-logo-link" title="Pillarix OS">
                     <img src="pillarix.png" alt="Pillarix Logo" class="brand-logo-img">
                 </a>
             </div>
-            
+
             <nav class="notch-nav">
                 <a href="#download" class="nav-link" id="nav-download">Скачать ISO</a>
-                
+
                 <select class="lang-select" id="lang-select" onchange="changeLanguage(this.value)">
                     <option value="ru">Русский</option>
                     <option value="en">English</option>
@@ -345,16 +315,14 @@
     <!-- MAIN HERO SECTION -->
     <section class="hero-section">
         <h1 class="hero-title">Pillarix</h1>
-        
+
         <p class="hero-description" id="hero-desc">
             <highlight>64-битная</highlight> операционная система, написанная с нуля одним разработчиком из Беларуси <highlight>без использования искусственного интеллекта</highlight>. Поддерживает файловую систему Ext4 и даже имеет встроенную прямо в ядро утилиту <highlight>mkfs.ext4</highlight>.
         </p>
     </section>
 
-    <!-- 5:4 SQUARE DOWNLOAD PANEL -->
     <div class="download-container" id="download">
         <div class="fedora-panel">
-            <!-- Зеленая иконка в углу -->
             <svg class="panel-badge" viewBox="0 0 100 130" preserveAspectRatio="none">
                 <path d="M0 0 L100 0 L100 130 L0 130 Z" fill="#00c853"/>
                 <path d="M0 0 L100 0 L60 70 L0 130 Z" fill="#00e676"/>
@@ -362,18 +330,11 @@
                 <path d="M0 65 L45 55 L35 130 L0 130 Z" fill="#64dd17"/>
             </svg>
 
-            <!-- Текст панели -->
             <div class="panel-info">
                 <h2 id="panel-title">Официальный релиз Pillarix OS</h2>
                 <p id="panel-subtitle">x86_64 Architecture • Bare-metal / QEMU Ready • Direct Kernel Execution</p>
             </div>
 
-            <!-- ИКОНКА ДИСКА ISO ПО ЦЕНТРУ -->
-            <div class="disc-icon-container">
-                <img src="iso.png" alt="ISO Disc Icon" class="disc-icon-img">
-            </div>
-
-            <!-- ССЫЛКА НА GITHUB RELEASE -->
             <a href="https://github.com/root-torvalds/Pillarix/releases/download/v4.19.0-alpha/pillarix.iso" class="btn-download" id="btn-download-text">
                 <svg viewBox="0 0 24 24"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
                 <span>Скачать ISO образ Pillarix</span>
@@ -409,7 +370,7 @@
                 navInfo: "जानकारी और सहायता",
                 navDocs: "दस्तावेज़ीकरण",
                 navGithub: "GitHub पर कोड",
-                heroDesc: "बेलारूस के एक एकल डेवलपर द्वारा <highlight>बिना AI का उपयोग किए</highlight> खросच से लिखी गई एक <highlight>64-बिट</highlight> स्वतंत्र ऑपरेटिंग सिस्टम। इसमें Ext4 फ़ाइल सिस्टम का समर्थन है और कर्नेल-स्तरीय <highlight>mkfs.ext4</highlight> उपयोगिता भी शामिल है।",
+                heroDesc: "बेलारूस के एक एकल डेवलपर द्वारा <highlight>बिना AI का उपयोग किए</highlight> खरोंच से लिखी गई एक <highlight>64-बिट</highlight> स्वतंत्र ऑपरेटिंग सिस्टम। इसमें Ext4 फ़ाइल सिस्टम का समर्थन है और कर्नेल-स्तरीय <highlight>mkfs.ext4</highlight> उपयोगिता भी शामिल है।",
                 panelTitle: "आधिकारिक Pillarix OS रिलीज़",
                 panelSubtitle: "x86_64 Architecture • Bare-metal / QEMU Ready • Direct Kernel Execution",
                 btnDownload: "Pillarix ISO डाउनलोड करें"
