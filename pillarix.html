@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pillarix OS — 64-bit Independent Operating System</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Inter:wght@300;400;600;800;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #07090e;
+            --notch-bg: rgba(13, 17, 23, 0.85);
+            --card-bg: rgba(18, 24, 38, 0.7);
+            --primary-neon: #00f2fe;
+            --secondary-neon: #4facfe;
+            --accent-purple: #7f00ff;
+            --text-main: #f0f6fc;
+            --text-muted: #8b949e;
+            --border-glow: rgba(0, 242, 254, 0.3);
+            --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            --font-mono: 'Fira Code', monospace;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: var(--font-sans);
+            overflow-x: hidden;
+            line-height: 1.6;
+            background-image:
+                radial-gradient(circle at 50% 0%, rgba(0, 242, 254, 0.12) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(127, 0, 255, 0.08) 0%, transparent 50%);
+            background-attachment: fixed;
+        }
+
+        /* --- ЧЁЛКА / NOTCH HEADER --- */
+        .notch-container {
+            position: fixed;
+            top: 15px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1000;
+            width: 92%;
+            max-width: 1200px;
+        }
+
+        .notch-header {
+            background: var(--notch-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 10px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5),
+                        0 0 15px rgba(0, 242, 254, 0.1);
+        }
+
+        .brand-logo-link {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .brand-logo-img {
+            height: 38px;
+            width: auto;
+            object-fit: contain;
+            filter: drop-shadow(0 0 8px rgba(0, 242, 254, 0.5));
+            transition: transform 0.3s ease, filter 0.3s ease;
+        }
+
+        .brand-logo-link:hover .brand-logo-img {
+            transform: scale(1.08);
+            filter: drop-shadow(0 0 16px rgba(0, 242, 254, 0.9));
+        }
+
+        .notch-nav {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .nav-link {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            transition: color 0.3s ease, text-shadow 0.3s ease;
+            cursor: pointer;
+        }
+
+        .nav-link:hover {
+            color: var(--primary-neon);
+            text-shadow: 0 0 8px rgba(0, 242, 254, 0.6);
+        }
+
+        .lang-select {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: var(--text-main);
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 13px;
+            cursor: pointer;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        .lang-select:hover {
+            border-color: var(--primary-neon);
+        }
+
+        .lang-select option {
+            background-color: #0d1117;
+            color: #fff;
+        }
+
+        /* --- HERO SECTION --- */
+        .hero-section {
+            min-height: 85vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 140px 20px 40px;
+        }
+
+        .hero-title {
+            font-size: clamp(4rem, 15vw, 10.5rem);
+            font-weight: 900;
+            letter-spacing: -2px;
+            text-transform: uppercase;
+            background: linear-gradient(135deg, #ffffff 0%, var(--primary-neon) 50%, var(--accent-purple) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 0 35px rgba(0, 242, 254, 0.4));
+            line-height: 0.95;
+            margin-bottom: 25px;
+            user-select: none;
+        }
+
+        .hero-description {
+            max-width: 850px;
+            font-size: 1.2rem;
+            color: #c9d1d9;
+            margin-bottom: 20px;
+            font-weight: 400;
+            background: rgba(13, 17, 23, 0.6);
+            padding: 24px 32px;
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+        }
+
+        .hero-description highlight, .info-text highlight {
+            color: var(--primary-neon);
+            font-weight: 600;
+        }
+
+        /* --- FEDORA-STYLE DOWNLOAD PANEL --- */
+        .download-container {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            margin: 20px auto 60px;
+            padding: 0 20px;
+        }
+
+        .fedora-panel {
+            background: var(--card-bg);
+            border-radius: 28px;
+            padding: 40px;
+            position: relative;
+            border: 1px solid var(--border-glow);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6),
+                        0 0 30px rgba(0, 242, 254, 0.15);
+            backdrop-filter: blur(12px);
+            width: 100%;
+            max-width: 600px;
+            aspect-ratio: 5 / 4;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            text-align: center;
+            overflow: visible;
+        }
+
+        .panel-badge {
+            position: absolute;
+            top: -12px;
+            left: -12px;
+            width: 75px;
+            height: 95px;
+            border-radius: 12px;
+            box-shadow: -4px -4px 20px rgba(0, 230, 118, 0.3);
+            transform: scaleX(-1);
+            z-index: 5;
+        }
+
+        .panel-info {
+            margin-top: 50px;
+        }
+
+        .panel-info h2 {
+            font-size: 1.9rem;
+            font-weight: 900;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, #00e676 0%, #00f2fe 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 0 15px rgba(0, 230, 118, 0.3));
+        }
+
+        .panel-info p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        .btn-download {
+            background: linear-gradient(135deg, var(--primary-neon), var(--secondary-neon));
+            color: #030712;
+            font-weight: 800;
+            font-size: 1.15rem;
+            padding: 18px 32px;
+            border-radius: 16px;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 0 25px rgba(0, 242, 254, 0.4);
+            border: none;
+            cursor: pointer;
+            width: 100%;
+            justify-content: center;
+        }
+
+        .btn-download:hover {
+            transform: translateY(-4px) scale(1.02);
+            box-shadow: 0 0 40px rgba(0, 242, 254, 0.8);
+            background: linear-gradient(135deg, #38ef7d, var(--primary-neon));
+        }
+
+        .btn-download svg {
+            width: 24px;
+            height: 24px;
+            fill: currentColor;
+        }
+
+        /* --- INFO & HELP SECTION --- */
+        .info-section {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            padding: 40px 20px 100px;
+        }
+
+        .info-container {
+            width: 100%;
+            max-width: 900px;
+        }
+
+        .info-card {
+            background: var(--card-bg);
+            border-radius: 28px;
+            padding: 50px 40px;
+            border: 1px solid var(--border-glow);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6),
+                        0 0 30px rgba(0, 242, 254, 0.1);
+            backdrop-filter: blur(12px);
+        }
+
+        .info-title {
+            font-size: 2.2rem;
+            font-weight: 900;
+            margin-bottom: 25px;
+            background: linear-gradient(135deg, #ffffff 0%, var(--primary-neon) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-align: center;
+        }
+
+        .info-text {
+            color: #c9d1d9;
+            font-size: 1.05rem;
+            margin-bottom: 20px;
+            line-height: 1.7;
+        }
+
+        .info-text code {
+            font-family: var(--font-mono);
+            background: rgba(0, 242, 254, 0.1);
+            color: var(--primary-neon);
+            padding: 2px 6px;
+            border-radius: 6px;
+            font-size: 0.95rem;
+        }
+
+        /* --- TABLE STYLING --- */
+        .table-responsive {
+            width: 100%;
+            overflow-x: auto;
+            margin: 30px 0;
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(13, 17, 23, 0.8);
+        }
+
+        .pillarix-table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            font-size: 0.95rem;
+        }
+
+        .pillarix-table th,
+        .pillarix-table td {
+            padding: 16px 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .pillarix-table th {
+            background: rgba(0, 242, 254, 0.08);
+            color: var(--primary-neon);
+            font-weight: 700;
+            font-family: var(--font-mono);
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            letter-spacing: 0.5px;
+        }
+
+        .pillarix-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .pillarix-table tr:hover {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .pillarix-table td code {
+            font-family: var(--font-mono);
+            color: #79c0ff;
+            background: rgba(121, 192, 255, 0.1);
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+
+        @media (max-width: 768px) {
+            .notch-nav {
+                gap: 10px;
+            }
+            .nav-link {
+                font-size: 12px;
+            }
+            .fedora-panel {
+                aspect-ratio: auto;
+                min-height: 420px;
+                padding: 30px 20px;
+            }
+            .info-card {
+                padding: 30px 20px;
+            }
+        }
+    </style>
+</head>
+<body id="top">
+
+    <!-- ЧЁЛКА / NOTCH HEADER -->
+    <div class="notch-container">
+        <header class="notch-header">
+            <div class="notch-left">
+                <a href="#top" class="brand-logo-link" title="Pillarix OS">
+                    <img src="pillarix.png" alt="Pillarix Logo" class="brand-logo-img">
+                </a>
+            </div>
+
+            <nav class="notch-nav">
+                <a href="#download" class="nav-link" id="nav-download">Скачать ISO</a>
+
+                <select class="lang-select" id="lang-select" onchange="changeLanguage(this.value)">
+                    <option value="ru">Русский</option>
+                    <option value="en">English</option>
+                    <option value="hi">हिन्दी</option>
+                    <option value="es">Español</option>
+                    <option value="fr">Français</option>
+                </select>
+
+                <a href="#info" class="nav-link" id="nav-info">Информация и помощь</a>
+                <a class="nav-link" id="nav-docs" onclick="alert('Раздел в разработке')">Документация</a>
+                <a href="https://github.com/root-torvalds/Pillarix.git" target="_blank" class="nav-link" id="nav-github">Код на GitHub</a>
+            </nav>
+        </header>
+    </div>
+
+    <!-- MAIN HERO SECTION -->
+    <section class="hero-section">
+        <h1 class="hero-title">Pillarix</h1>
+
+        <p class="hero-description" id="hero-desc">
+            <highlight>64-битная</highlight> операционная система, написанная с нуля одним разработчиком из Беларуси <highlight>без использования искусственного интеллекта</highlight>. Поддерживает файловую систему Ext4 и даже имеет встроенную прямо в ядро утилиту <highlight>mkfs.ext4</highlight>.
+        </p>
+    </section>
+
+    <!-- FEDORA-STYLE 5:4 SQUARE DOWNLOAD PANEL -->
+    <div class="download-container" id="download">
+        <div class="fedora-panel">
+            <svg class="panel-badge" viewBox="0 0 100 130" preserveAspectRatio="none">
+                <path d="M0 0 L100 0 L100 130 L0 130 Z" fill="#00c853"/>
+                <path d="M0 0 L100 0 L60 70 L0 130 Z" fill="#00e676"/>
+                <path d="M30 65 L100 30 L100 130 L35 130 Z" fill="#76ff03"/>
+                <path d="M0 65 L45 55 L35 130 L0 130 Z" fill="#64dd17"/>
+            </svg>
+
+            <div class="panel-info">
+                <h2 id="panel-title">Официальный релиз Pillarix OS</h2>
+                <p id="panel-subtitle">x86_64 Architecture • Bare-metal / QEMU Ready • Direct Kernel Execution</p>
+            </div>
+
+            <a href="https://github.com/root-torvalds/Pillarix/releases/download/v4.19.0-alpha/pillarix.iso" class="btn-download" id="btn-download-text">
+                <svg viewBox="0 0 24 24"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
+                <span>Скачать ISO образ Pillarix</span>
+            </a>
+        </div>
+    </div>
+
+    <!-- ИНФОРМАЦИЯ И ПОМОЩЬ -->
+    <section class="info-section" id="info">
+        <div class="info-container">
+            <div class="info-card">
+                <h2 class="info-title">Информация и помощь</h2>
+                <p class="info-text">
+                    <highlight>Pillarix</highlight> — это блатная операционная система под x86_64 qemu_system, написанная одним разработчиком из Беларуси. Она успешно загружается в 64-битном длинном режиме, инициализируется и запускает shell. Пока что рабочего user-space нету как и разделения на кольца защиты (ring-0, ring-1, ring-2, ring-3, чаще ring-0 и ring-3).
+                </p>
+                <p class="info-text">
+                    На данный момент (15 ноября 2026 года) там есть такие команды как <code>math</code>, <code>""</code>, <code>ls</code>, <code>cat</code>, <code>edit</code>, <code>touch</code>, <code>ver</code>, <code>help</code>, <code>clear</code>, <code>reboot</code> и <code>install</code>. Вот таблица как они работают:
+                </p>
+
+                <div class="table-responsive">
+                    <table class="pillarix-table">
+                        <thead>
+                            <tr>
+                                <th>Пример команды</th>
+                                <th>Вывод команды либо *действие</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>"Hello world!"</code></td>
+                                <td>Hello world!</td>
+                            </tr>
+                            <tr>
+                                <td><code>ls</code></td>
+                                <td>*выводит список всех файлов и папок</td>
+                            </tr>
+                            <tr>
+                                <td><code>cat text.txt</code></td>
+                                <td>*содержимое файла text.txt</td>
+                            </tr>
+                            <tr>
+                                <td><code>touch text.txt</code></td>
+                                <td>*создаст файл text.txt</td>
+                            </tr>
+                            <tr>
+                                <td><code>math 1488*67/69+52-42</code></td>
+                                <td>1454.86956522 *(вывел результат вычислений)</td>
+                            </tr>
+                            <tr>
+                                <td><code>reboot</code></td>
+                                <td>*перезагружает qemu/пк</td>
+                            </tr>
+                            <tr>
+                                <td><code>install</code></td>
+                                <td>*форматирует диск и ставит на него pillarix</td>
+                            </tr>
+                            <tr>
+                                <td><code>clear</code></td>
+                                <td>*форматирует диск и ставит на него pillarix</td>
+                            </tr>
+                            <tr>
+                                <td><code>help</code></td>
+                                <td>*выводит список доступных команд</td>
+                            </tr>
+                            <tr>
+                                <td><code>ver</code></td>
+                                <td>*выводит версию pillarix</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <p class="info-text">
+                    Также Pillarix использует связку <highlight>UEFI GOP + BackBuffering + VirtIO</highlight>, прерывания <highlight>IOAPIC + LAPIC</highlight>. Также можно зайти на гитхаб PillarixOS по ссылке на главной странице сайта и смотрите <code>README.md</code>.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- JS СКРИПТ ПЕРЕВОДА -->
+    <script>
+        const translations = {
+            ru: {
+                navDownload: "Скачать ISO",
+                navInfo: "Информация и помощь",
+                navDocs: "Документация",
+                navGithub: "Код на GitHub",
+                heroDesc: "<highlight>64-битная</highlight> операционная система, написанная с нуля одним разработчиком из Беларуси <highlight>без использования искусственного интеллекта</highlight>. Поддерживает файловую систему Ext4 и даже имеет встроенную прямо в ядро утилиту <highlight>mkfs.ext4</highlight>.",
+                panelTitle: "Официальный релиз Pillarix OS",
+                panelSubtitle: "x86_64 Architecture • Bare-metal / QEMU Ready • Direct Kernel Execution",
+                btnDownload: "Скачать ISO образ Pillarix"
+            },
+            en: {
+                navDownload: "Download ISO",
+                navInfo: "Info & Help",
+                navDocs: "Documentation",
+                navGithub: "Code on GitHub",
+                heroDesc: "A <highlight>64-bit</highlight> independent operating system written from scratch by a single developer from Belarus <highlight>without using AI</highlight>. Features Ext4 filesystem support and even includes a built-in kernel-level <highlight>mkfs.ext4</highlight> utility.",
+                panelTitle: "Official Pillarix OS Release",
+                panelSubtitle: "x86_64 Architecture • Bare-metal / QEMU Ready • Direct Kernel Execution",
+                btnDownload: "Download Pillarix ISO"
+            },
+            hi: {
+                navDownload: "ISO डाउनलोड करें",
+                navInfo: "जानकारी और सहायता",
+                navDocs: "दस्तावेज़ीकरण",
+                navGithub: "GitHub पर कोड",
+                heroDesc: "बेलारूस के एक एकल डेवलपर द्वारा <highlight>बिना AI का उपयोग किए</highlight> खरोंच से लिखी गई एक <highlight>64-बिट</highlight> स्वतंत्र ऑपरेटिंग सिस्टम। इसमें Ext4 फ़ाइल सिस्टम का समर्थन है और कर्नेल-स्तरीय <highlight>mkfs.ext4</highlight> उपयोगिता भी शामिल है।",
+                panelTitle: "आधिकारिक Pillarix OS रिलीज़",
+                panelSubtitle: "x86_64 Architecture • Bare-metal / QEMU Ready • Direct Kernel Execution",
+                btnDownload: "Pillarix ISO डाउनलोड करें"
+            },
+            es: {
+                navDownload: "Descargar ISO",
+                navInfo: "Información y Ayuda",
+                navDocs: "Documentación",
+                navGithub: "Código en GitHub",
+                heroDesc: "Un sistema operativo independiente de <highlight>64 bits</highlight> escrito desde cero por un solo desarrollador de Bielorrusia <highlight>sin usar IA</highlight>. Cuenta con soporte para el sistema de archivos Ext4 e incluye una herramienta <highlight>mkfs.ext4</highlight> integrada en el núcleo.",
+                panelTitle: "Lanzamiento Oficial de Pillarix OS",
+                panelSubtitle: "x86_64 Architecture • Bare-metal / QEMU Ready • Direct Kernel Execution",
+                btnDownload: "Descargar ISO de Pillarix"
+            },
+            fr: {
+                navDownload: "Télécharger l'ISO",
+                navInfo: "Info & Aide",
+                navDocs: "Documentation",
+                navGithub: "Code sur GitHub",
+                heroDesc: "Un système d'exploitation indépendant <highlight>64 bits</highlight> écrit à partir de zéro par un seul développeur biélorusse <highlight>sans utiliser d'IA</highlight>. Il prend en charge le système de fichiers Ext4 et intègre un utilitaire <highlight>mkfs.ext4</highlight> directement dans le noyau.",
+                panelTitle: "Version Officielle de Pillarix OS",
+                panelSubtitle: "x86_64 Architecture • Bare-metal / QEMU Ready • Direct Kernel Execution",
+                btnDownload: "Télécharger l'ISO Pillarix"
+            }
+        };
+
+        function changeLanguage(lang) {
+            const data = translations[lang];
+            if (!data) return;
+
+            document.getElementById('nav-download').textContent = data.navDownload;
+            document.getElementById('nav-info').textContent = data.navInfo;
+            document.getElementById('nav-docs').textContent = data.navDocs;
+            document.getElementById('nav-github').textContent = data.navGithub;
+            document.getElementById('hero-desc').innerHTML = data.heroDesc;
+            document.getElementById('panel-title').textContent = data.panelTitle;
+            document.getElementById('panel-subtitle').textContent = data.panelSubtitle;
+            document.getElementById('btn-download-text').querySelector('span').textContent = data.btnDownload;
+        }
+    </script>
+</body>
+</html>
